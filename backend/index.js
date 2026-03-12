@@ -3,17 +3,22 @@ import mongoose from "mongoose";
 import userRouter from "./routers/userRouter.js";
 import authenticateUser from "./middlewares/authentication.js";
 import productRouter from "./routers/productRouter.js";
+import cors from "cors";
+import dotenv from "dotenv";
+
+dotenv.config();
+
 
 const app = express();
 
-const mongodbURI = "mongodb+srv://kanchana:KanchANA2000@cluster0.scmq5gg.mongodb.net/icomputers?appName=Cluster0"
+const mongodbURI = process.env.MONGO_URI
 
 mongoose.connect(mongodbURI).then(
     ()=>{
         console.log("connected to mongoDB")
     }
 )
-
+app.use(cors())
 app.use(express.json())
 // call middleware 
 app.use (authenticateUser)
@@ -31,7 +36,7 @@ app.post("/", (req,res)=>{
 app.delete("/", ()=>{console.log("delete request received.")})
 app.put("/", ()=>{console.log("put request received.")})*/
 
-app.use ("/users", userRouter)
-app.use("/products", productRouter)
+app.use ("/api/users", userRouter)
+app.use("/api/products", productRouter)
 
 app.listen(3000, ()=>{console.log("server is running on port 3000")});
