@@ -2,18 +2,20 @@ import { Route, Routes } from 'react-router-dom'
 import './App.css'
 import HomePage from './pages/homePage'
 import AdminPage from './pages/adminPage'
-import TestPage from './pages/test'
+//import TestPage from './pages/test' <Route path='/test' element={<TestPage/>} />
 import LoginPage from './pages/loginPage'
+import {Toaster} from 'react-hot-toast'
 
 function App() {
 
   return (
     
       <div className='w-full h-screen  flex justify-center items-center relative bg-primary text-secondary'>
+        <Toaster position='top-right'/>
         <Routes>
           <Route path='/' element={<HomePage/>} />
           <Route path='/admin/*' element={<AdminPage/>} />
-          <Route path='/test' element={<TestPage/>} />
+          
           <Route path='/login' element={<LoginPage/>}/>
         </Routes>
         {/*<div className='w-[600px] h-[600px] bg-amber-400 flex flex-col justify-center items-center relative'>

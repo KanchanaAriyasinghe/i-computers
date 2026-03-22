@@ -1,21 +1,24 @@
-import jwt, { decode } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv"
+dotenv.config()
+export default function authenticateUser(req, res, next){
+        
+        const header = req.header("Authorization")
 
-export default function authenticateUser (req,res,next){
-        const header = req.header ("Authorization")
-
-        if (header != null){
+        if(header !=null){            
             const token = header.replace("Bearer ","")
-            console.log(token)
 
-            //decryption
-            jwt.verify(token, "I-CoMputersBatch10",
-                (error, decode)=>{
-                    if(decode == null){
-                        res.json({
-                            message : "Invalid Token. Please login again."
-                        })
+            jwt.verify(token, process.env.JWT_SECRET_KEY , 
+                (error, decoded)=>{   
+                                  
+                    if(decoded == null){
+                        res.json(
+                            {
+                                message : "Invalid Token Please Login Again"
+                            }
+                        )
                     }else{
-                        req.user = decode
+                        req.user = decoded
                         next()
                     }
                 }
@@ -24,4 +27,4 @@ export default function authenticateUser (req,res,next){
         }else{
             next()
         }
-}
+    }

@@ -1,9 +1,27 @@
-import { useState } from "react"
+/*import { useState } from "react"
+import {createClient} from "@supabase/supabase-js"
+import UploadMedia from "../utils/mediaUpload"
+
+let url = "https://yepbgwccckbxgdmsgxlf.supabase.co"
+let key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InllcGJnd2NjY2tieGdkbXNneGxmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MTA4NDYsImV4cCI6MjA4ODk4Njg0Nn0.eqz0Gv8vzRpkIS3oCK-BggrBtcvdriO45ewUrAUF9ow"
+
+const supabase = createClient(url, key)
 
 export default function TestPage(){
-    const [emotion , setEmotion] = useState("😄")
+    //const [emotion , setEmotion] = useState("😄")
+    const [file, setFile] = useState(null)
+
+    async function handleUploadFile(){
+        try{
+            const url = await UploadMedia(file)
+            console.log(url)
+        }catch(error){
+            console.log(error)
+        }
+        
+    }
     return(
-        <div className='w-full h-screen  flex flex-col justify-center items-center'>
+        /*<div className='w-full h-screen  flex flex-col justify-center items-center'>
             <div className="w-[300px] h-[300px] border-[6px]  flex flex-col justify-center items-center">
                 {emotion}
             </div>
@@ -29,6 +47,16 @@ export default function TestPage(){
             </div>
             
            
+        </div>*/
+        /*<div className="w-full h-screen flex justify-center items-center text-secondary flex-col">
+            <input 
+            onChange={(e)=>{
+                setFile(e.target.files[0])
+            }}
+            type="file"/>
+            <button onClick={handleUploadFile} className="bg-secondary text-primary px-4 py-1 rounded-[6px] mt-10">Upload</button>
+
         </div>
     )
 }
+*/
