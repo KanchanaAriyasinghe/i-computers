@@ -13,7 +13,7 @@ export default function LoginPage(){
             email:email,
             password:password
         }).then((response)=>{
-            console.log("Login successfully.", response)
+            //console.log("Login successfully.", response)
             localStorage.setItem("token", response.data.token)
             toast.success("Login successfully.")
             console.log(localStorage.getItem("token"))
