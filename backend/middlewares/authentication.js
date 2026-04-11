@@ -12,7 +12,7 @@ export default function authenticateUser(req, res, next){
                 (error, decoded)=>{   
                                   
                     if(decoded == null){
-                        res.json(
+                        res.status(401).json(
                             {
                                 message : "Invalid Token Please Login Again"
                             }

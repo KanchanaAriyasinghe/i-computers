@@ -5,6 +5,7 @@ import authenticateUser from "./middlewares/authentication.js";
 import productRouter from "./routers/productRouter.js";
 import cors from "cors";
 import dotenv from "dotenv";
+import orderRouter from "./routers/orderRouter.js";
 
 dotenv.config();
 
@@ -38,5 +39,6 @@ app.put("/", ()=>{console.log("put request received.")})*/
 
 app.use ("/api/users", userRouter)
 app.use("/api/products", productRouter)
+app.use("/api/orders", orderRouter)
 
 app.listen(3000, ()=>{console.log("server is running on port 3000")});

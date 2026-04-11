@@ -54,7 +54,7 @@ export async function getAllProducts(req, res) {
 
 			res.json(products);
 		}else {
-            const products = await Product.find({ isAvailble: true });
+            const products = await Product.find({ isAvailable: true });
 
             res.json(products);
         }
@@ -135,7 +135,7 @@ export async function getProductById(req,res){
                 message : "Product not found"
             })
         }else{
-            if(product.isAvailble){
+            if(product.isAvailable){
                 res.json(product)
             }else{
                 if(isAdmin(req)){

@@ -1,32 +1,43 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import uploadMedia from "../../utils/mediaUpload";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-export default function AdminAddProductPage(){
+export default function AdminEditProductPage(){
 
-    const [productId, setProductId] = useState("");
-    const [name, setName] = useState("");
-    const [altNames, setAltNames] = useState("");
-    const [price, setPrice] = useState("");
-    const [labeledPrice, setLabeledPrice] = useState("");
-    const [description, setDescription] = useState("");
-    const [images, setImages] = useState([]);
-    const [brand, setBrand] = useState("");
-    const [model, setModel] = useState("");
-    const [category, setCategory] = useState("");
-    const [isAvailable, setIsAvailable] = useState(true);
-    const [stock, setStock] = useState(0);
-    const navigate = useNavigate();
-    const [isSaving, setIsSvaing] = useState(false)
+    const location = useLocation();
     
-    async function handleSave(){
+    const [productId, setProductId] = useState(location.state?.productId || "");
+    const [name, setName] = useState(location.state?.name || "");
+    const [altNames, setAltNames] = useState(location.state?.altNames ? location.state.altNames.join(",") : "");
+    const [price, setPrice] = useState(location.state?.price || "");
+    const [labeledPrice, setLabeledPrice] = useState(location.state?.labeledPrice || "");
+    const [description, setDescription] = useState(location.state?.description);
+    const [images, setImages] = useState([]);
+    const [brand, setBrand] = useState(location.state?.brand || "");
+    const [model, setModel] = useState(location.state?.model || "");
+    const [category, setCategory] = useState(location.state?.category || "");
+    const [isAvailable, setIsAvailable] = useState(location.state?.isAvailable || false);
+    const [stock, setStock] = useState(location.state?.stock || 0);
+    const navigate = useNavigate();
+    const [isUpdating, setIsUpdating] = useState(false)
+    
+    useEffect(
+        ()=>{
+            if(location.state == null){
+                toast.error("No product data found. Please select a product to edit.")
+                navigate("/admin/products");
+            }
+        },[]
+    )
+    
+    
+    async function handleUpdate(){
 
         try{
 
-            setIsSvaing(true)
-
+            setIsUpdating(true)
             const token = localStorage.getItem("token");
 
             //console.log(localStorage.getItem("token"));
@@ -66,8 +77,12 @@ export default function AdminAddProductPage(){
                 stock : stock
             }
 
+            if (urls.length == 0){
+                productData.images = location.state.images
+            }
+
             //console.log("Submitting productData:", productData)
-            await axios.post(import.meta.env.VITE_API_URL+"/products", productData,
+            await axios.put(import.meta.env.VITE_API_URL+"/products/" + productId, productData,
                 {
                     headers : {
                         "Authorization" : "Bearer "+token
@@ -75,16 +90,16 @@ export default function AdminAddProductPage(){
                 }
             )
 
-            toast.success("Product added successfully!");
+            toast.success("Product updated successfully!");
             //
             navigate("/admin/products");
 
 
         }catch(error){
-            setIsSvaing(false)
-            console.error("Error adding product:", error);
+            setIsUpdating(false)
+            console.error("Error updating product:", error);
             console.log("Error response data:", error?.response);
-            toast.error(error?.response?.data?.message || "Failed to add product. Please try again.")
+            toast.error(error?.response?.data?.message || "Failed to update product. Please try again.")
         }
     }
 
@@ -96,12 +111,10 @@ export default function AdminAddProductPage(){
     return(
         <div className="w-full h-full flex flex-col items-center p-4 overflow-y-scroll">
             <div className="sticky top-0 w-full h-[100px] rounded-lg bg-accent text-white flex items-center p-5 justify-between shadow-2xl">
-                <h1 className="text-2xl  font-semibold">Add New Product</h1>
+                <h1 className="text-2xl  font-semibold">Edit Product</h1>
                 <div className="h-full  flex justify-center items-center">
-                    <button onClick={handleSave} className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600" disabled={isSaving}>{isSaving? "Saving...":"Save"}</button>
-                    <button className="ml-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                    onClick={handleCancel}
-                    >Cancel</button>
+                    <button onClick={handleUpdate} className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600" disabled={isUpdating}>{isUpdating? "Updating...":"Update"}</button>
+                    <button className="ml-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600" onClick={handleCancel}>Cancel</button>
                 </div>
             </div>
             <div className="w-full flex flex-wrap bg-white shadow-2xl p-5 mt-8 rounded-lg">
@@ -110,6 +123,7 @@ export default function AdminAddProductPage(){
                     <label className="block mb-2 font-semibold">Product ID</label>
                     <input className="border border-gray-300 rounded-md p-2 w-full"
                         value={productId}
+                        disabled = {true}
                         onChange={(e)=>{setProductId(e.target.value)}}
                     />
                 </div>
