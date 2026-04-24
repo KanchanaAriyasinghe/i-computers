@@ -60,3 +60,34 @@ export default function TestPage(){
     )
 }
 */
+
+import { useState } from "react"
+import { useRef } from "react"
+
+export default function TestPage(){
+    const videoRef = useRef(null)
+    const [buttonText, setButtonText] = useState("play")
+    return(
+        <div className="flex items-center justify-center">
+            <div className="w-[400px] h-[400px] bg-red-900 rounded-full rounded-tr-none border-12 overflow-hidden relative justify-center items-center flex">
+                <video ref = {videoRef} autoPlay src="/demo.mp4" className="w-full h-full object-cover"/>
+                <button 
+                onClick={
+                    ()=>{
+                        if(videoRef.current.paused){
+                            videoRef.current.play()
+                            setButtonText("pause")
+                        }else{
+                            videoRef.current.pause()
+                            setButtonText("play")
+                        }
+                    }
+                }
+                className="bg-sky-50 p-5 rounded-lg absolute">
+                    {buttonText}
+                </button>
+            </div>
+
+        </div>
+    )
+}

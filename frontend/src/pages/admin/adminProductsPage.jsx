@@ -41,8 +41,17 @@ export default function AdminProductsPage(){
 
             {/* Header */}
             <div className="sticky top-0 z-10 w-full h-[90px] rounded-xl bg-gradient-to-r from-accent to-primary text-white flex items-center px-6 justify-between shadow-lg mb-6">
-                <h1 className="text-3xl font-bold tracking-wide">Products</h1>
-                <p className="text-sm opacity-80">{products.length} Items</p>
+                <div>
+					<h1  className="text-3xl font-bold tracking-wide">Products</h1>
+					<p className="text-sm opacity-80">
+						Manage your store Products with ease
+					</p>
+				</div>
+                <div className="flex items-center gap-4">
+                    <span className="text-sm text-gray-600">
+                        Total Products: <span className="font-semibold text-gray-800">{products.length}</span>
+                    </span>
+                </div>
             </div>
 
             {/* Table Container */}

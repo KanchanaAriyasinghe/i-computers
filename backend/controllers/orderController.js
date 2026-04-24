@@ -109,3 +109,83 @@ export default async function createOrder(req, res){
         })
     }
 }
+
+export async function getOrders(req, res){
+    try{
+
+        if(req.user == null){
+            res.status(401).json({
+                message : "You need to be logged into view your orders."
+            })
+            return
+        }
+
+        const pageSizeInString = req.params.pageSize || "10"
+        const pageNumberInString = req.params.pageNumber || "12"
+
+        const pageSize = parseInt(pageSizeInString)
+        const pageNumber = parseInt(pageNumberInString)
+
+        if(pageSize<1 || pageSize > 100){
+            res.status(400).json({
+                message  : "pageSize should be between 1 and 100"
+            })
+            return
+        }
+
+        if(req.user.isAdmin){
+
+            const orderCount = await Order.countDocuments()
+            const totalPages = Math.ceil(orderCount/pageSize)
+
+            const orders = await Order.find().sort({date : -1}).skip((pageNumber - 1)*pageSize).limit(pageSize)
+
+            res.status(200).json({
+                orders : orders,
+                totalPages : totalPages,
+                total : orderCount
+            })
+
+        }else{
+            const orders = await Order.find({email : req.user.email}).sort({date : -1}).skip((pageNumber - 1)*pageSize).limit(pageSize)
+            res.status(200).json({
+                orders : orders,
+                totalPages : totalPages,
+                total : orderCount
+            })
+        }
+
+    }catch(error){
+        console.log(error)
+        res.status(500).json({
+            message : "Error fetching orders."
+        })
+
+    }
+}
+
+export async function updateOrderStatusAndNotes(req,res){
+    if(req.user && req.user.isAdmin){
+        try{
+
+            const orderId = req.params.orderId
+            await   Order.findOneAndUpdate(
+                {orderId  : orderId},
+                {status : req.body.status, notes :  req.body.notes}
+            )
+            res.status(200).json({
+                message : "Order status and notes updated successfully"
+            })
+
+        }catch(error){
+            console.log(error)
+            res.status(500).json({
+                message : "Error updating order status and notes"
+            })
+        }
+    }else{
+         res.status(403).json({
+            message : "You are not authorized to perform this action"
+        })
+    }
+}

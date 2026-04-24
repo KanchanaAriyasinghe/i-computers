@@ -2,7 +2,7 @@ import { Route, Routes } from 'react-router-dom'
 import './App.css'
 import HomePage from './pages/homePage'
 import AdminPage from './pages/adminPage'
-//import TestPage from './pages/test' <Route path='/test' element={<TestPage/>} />
+import TestPage from './pages/test' 
 import LoginPage from './pages/loginPage'
 import {Toaster} from 'react-hot-toast'
 
@@ -17,6 +17,7 @@ function App() {
           <Route path='/admin/*' element={<AdminPage/>} />
           
           <Route path='/login' element={<LoginPage/>}/>
+          <Route path='/test' element={<TestPage/>} />
         </Routes>
         {/*<div className='w-[600px] h-[600px] bg-amber-400 flex flex-col justify-center items-center relative'>
         <div className='w-[70px] h-[70px] bg-blue-600'></div>
