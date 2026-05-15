@@ -147,6 +147,9 @@ export async function getOrders(req, res){
             })
 
         }else{
+            const orderCount = await Order.countDocuments({ email : req.user.email })
+
+            const totalPages = Math.ceil(orderCount / pageSize)
             const orders = await Order.find({email : req.user.email}).sort({date : -1}).skip((pageNumber - 1)*pageSize).limit(pageSize)
             res.status(200).json({
                 orders : orders,

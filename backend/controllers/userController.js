@@ -375,3 +375,52 @@ export async function getUserData(req,res){
         res.json(req.user)
     }
 }
+
+
+export async function getAllUsers(req, res) {
+    try {
+        const pageSize = parseInt(req.params.pageSize) || 10;
+        const currentPage = parseInt(req.params.currentPage) || 1;
+
+        const totalRegularUsers = await User.countDocuments({ isAdmin: false });
+        const totalPages = Math.ceil(totalRegularUsers / pageSize);
+
+        const adminUsers = await User.find({ isAdmin: true }).select("-password");
+
+        const regularUsers = await User
+            .find({ isAdmin: false })
+            .select("-password")
+            .skip((currentPage - 1) * pageSize)
+            .limit(pageSize);
+
+        res.json({
+            adminUsers,
+            regularUsers,
+            total: await User.countDocuments(),
+            totalPages,
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching users" });
+    }
+}
+
+export async function toggleBlockUser(req, res) {
+    try {
+        const userId = req.params.userId;
+        const action = req.params.action; // "block" or "unblock"
+
+        if (action !== "block" && action !== "unblock") {
+            return res.status(400).json({ message: "Invalid action" });
+        }
+
+        const isBlock = action === "block";
+
+        await User.findByIdAndUpdate(userId, { isBlock });
+
+        res.json({
+            message: `User ${isBlock ? "blocked" : "unblocked"} successfully`,
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Error updating user block status" });
+    }
+}
