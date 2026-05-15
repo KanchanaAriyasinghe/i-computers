@@ -9,6 +9,7 @@ import SettingsPage from "./settings";
 import BottomNavigationBar from "../componenets/bottomNavigationBar";
 import NotFoundPage from "./notFoundPage";
 import LandingPage from "./landingPage";
+import ContactPage from "./contactPage";
 
 export default function HomePage(){
     return(
@@ -19,7 +20,7 @@ export default function HomePage(){
                 <Routes>
                     <Route path="/" element={<LandingPage/>}/>
                     <Route path="/products" element={<ProductsPage/>}/>
-                    <Route path="/contact-us" element={<h1>Welcome to con...</h1>}/>
+                    <Route path="/contact-us" element={<ContactPage/>}/>
                     <Route path="/overview/:productId" element={<ProductOverviewPage/>}/>
                     <Route path="/cart" element={<CartPage/>}/>
                     <Route path="/my-orders" element={<CustomerMyOrdersPage/>}/>
