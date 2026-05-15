@@ -8,14 +8,14 @@ export default function CheckoutPage(){
     const location = useLocation()
     const [cart, setCart] = useState(location.state)
     return(
-        <div className="w-full min-h-full flex flex-col p-5 pb-20 items-center gap-4">
+        <div className="w-full min-h-full flex flex-col p-5 lg:pb-20 items-center gap-4 pb-[150px]">
             {cart.map(
                 (item, index)=>{
                     return(
-                        <div key={item.product.productId} className="bg-white w-[500px] h-[150px] rounded-lg shadow-2xl flex p-2 items-center relative">
+                        <div key={item.product.productId} className="bg-white w-full lg:w-[500px] lg:h-[150px] rounded-lg shadow-2xl flex lg:flex-row flex-col p-2 lg:items-center relative">
                             <img className="w-[100px] h-[100px] object-cover rounded-l-lg" src={item.product.image}/>
-                            <div className="h-full w-[400px] ml-2">
-                                <h1 className="text-lg font-semibold ">{item.product.name}</h1>
+                            <div className="h-full w-full lg:w-[400px] ml-2">
+                                <h1 className="w-full text-lg font-semibold ">{item.product.name}</h1>
                                 <p className="text-sm text-gray-500">{item.product.productId}</p>
                                 {
                                     item.product.labeledPrice > item.product.price && <span className="text-sm text-gray-500 mt-2 line-through">{getFormattedPrice(item.product.labeledPrice)}</span>
@@ -70,7 +70,7 @@ export default function CheckoutPage(){
                 }
             )}
 
-            <div className=" w-[500px] bg-white border  rounded-t-lg  shadow-2xl flex p-2 items-center  justify-between fixed bottom-0">
+            <div className=" w-full lg:w-[500px] bg-white border  rounded-t-lg  shadow-2xl flex p-2 items-center  justify-between fixed bottom-[82px] lg:bottom-0">
                 <CreateOrderModal cart={cart}/>
                 <p className="text-xl font-bold ml-4">Total: {getFormattedPrice(getCartTotal(cart))}</p>
             </div>

@@ -41,11 +41,11 @@ export default function ProductOverviewPage(){
                 </div>
             }
             {
-                status == "success" && <div className="w-full h-full flex">
-                    <div className="w-1/2 h-full flex justify-center items-center">
+                status == "success" && <div className="w-full h-full flex lg:flex-row flex-col">
+                    <div className="w-full lg:w-1/2 h-full flex justify-center items-center">
                         <ImageSlideShow images={product.images}/>
                     </div>
-                    <div className="w-1/2 h-full flex flex-col  p-5 ">
+                    <div className="w-full lg:w-1/2 h-full flex flex-col  p-5 ">
 
                         <h1 className="text-3xl font-bold">{product.name}
                             {
@@ -85,17 +85,18 @@ export default function ProductOverviewPage(){
                                 <span className="text-lg text-gray-500"><span className="text-gray-800 font-semibold">{product.category}</span></span>
                             </div>
 
-                            <p className="text-lg mt-5">
+                            <p className="text-lg mt-5 mb-[160px] lg:mb-0">
                                 {
                                     product.description
                                 } 
 
                             </p>
-                            <div className="flex mt-5 gap-5">
+                            <div className="flex mt-5 gap-5 fixed lg:static bottom-[82px] right-0 p-2 backdrop-blur-2xl lg:backdrop-blur-none w-full">
                                 <button className="w-62.5 h-16 bg-green-500 text-white text-xl font-semibold rounded-lg cursor-pointer hover:bg-green-700 transition-colors duration-300"
                                 onClick={
                                     ()=>{
                                         addToCart(product, 1)
+                                        toast.success(product.name+" added to cart")
                                     }
                                 }
                                 >

@@ -65,7 +65,7 @@ import { useState } from "react"
 import { useRef } from "react"
 
 export default function TestPage(){
-    const videoRef = useRef(null)
+    /* const videoRef = useRef(null)
     const [buttonText, setButtonText] = useState("play")
     return(
         <div className="flex items-center justify-center">
@@ -87,7 +87,13 @@ export default function TestPage(){
                     {buttonText}
                 </button>
             </div>
+            
 
         </div>
-    )
+    ) */
+   return(
+    <div className="bg-green-500 lg:bg-red-500 w-[300px] h-[300px]">
+
+    </div>
+   )
 }

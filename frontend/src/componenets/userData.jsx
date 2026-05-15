@@ -2,6 +2,7 @@ import { useEffect } from "react"
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom";
 import api from "../utils/api";
+import { CiUser } from "react-icons/ci";
 
 export default function UserData(){
     
@@ -26,11 +27,11 @@ export default function UserData(){
     ,[])
     
     return(
-        <div>
+        <>
             {user ? (
-                    <div className="flex">
-                        <img src={user.image} className="w-[50px] aspect-square"/>
-                        <select className="text-white text-center"
+                    <div className="flex h-full aspect-square lg:w-[150px] relative rounded-lg">
+                        <img src={user.image} referrerPolicy="no-referrer" className="w-full lg:w-auto aspect-square absolute lg:static rounded-lg"/>
+                        <select className="text-transparent lg:static absolute lg:text-white text-center w-full h-full"
                         onChange={(e)=>{
                             if(e.target.value === "option2"){
                                 navigate("/my-orders")
@@ -44,22 +45,23 @@ export default function UserData(){
 
                         }}
                         >
-                            <option value="option1" className="bg-secondary">{user.firstName}</option>
-                            <option value="option2" className="bg-secondary">My Orders</option>
-                            <option value="option3" className="bg-secondary">Settings</option>
-                            <option value="option4" className="bg-secondary">Logout</option>
+                            <option value="option1" className="bg-secondary text-white">{user.firstName}</option>
+                            <option value="option2" className="bg-secondary text-white">My Orders</option>
+                            <option value="option3" className="bg-secondary text-white">Settings</option>
+                            <option value="option4" className="bg-secondary text-white">Logout</option>
 
                         </select>
                     </div>
                 ):(
-                    <><Link to="/login" className="text-white text-lg font-semibold mr-4">
-						Login
+                    <>
+                    <Link to="/login" className="h-full aspect-square flex justify-center items-center rounded-lg text-accent text-3xl shadow-2xl shadow-accent">
+						<CiUser />
 					</Link>
-					<Link to="/register" className="text-white text-lg font-semibold">
+					<Link to="/register" className="text-white text-lg font-semibold hidden lg:block">
 						Register
 					</Link>
                     </>
             )}
-        </div>
+        </>
     )
 }
