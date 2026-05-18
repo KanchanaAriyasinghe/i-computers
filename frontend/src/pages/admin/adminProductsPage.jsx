@@ -6,11 +6,13 @@ import { BiEdit } from "react-icons/bi";
 import toast from "react-hot-toast";
 import LoadingAnimation from "../../componenets/loadingAnimation";
 import ProductDeleteModal from "../../componenets/productDeleteModal";
+import api from "../../utils/api";
 
 export default function AdminProductsPage(){
 
     const [products, setProducts] = useState([])
     const [isProductsAreLoaded, setIsProductsAreLoaded] = useState(false)
+    const [query, setQuery] = useState("")
 
     useEffect (
         () =>{
@@ -36,6 +38,18 @@ export default function AdminProductsPage(){
         [isProductsAreLoaded]
     )
 
+    async function handleSearch(){
+        try{
+            const response = await api.get("/products/search/"+query)
+            
+            setProducts(response.data)
+
+        }catch(error){
+            console.log(error);
+            toast .error("Failed to search products!");
+        }
+    }
+
     return(
         <div className="w-full h-full overflow-y-auto p-6 bg-gray-100 rounded-lg">
 
@@ -52,6 +66,12 @@ export default function AdminProductsPage(){
                         Total Products: <span className="font-semibold text-gray-800">{products.length}</span>
                     </span>
                 </div>
+            </div>
+
+            <div className="pb-4 w-full flex justify-center ">
+                <input value={query} onChange={(e) => setQuery(e.target.value)} type="text" placeholder="Search products..." className="w-3/4 p-3 rounded-lg border border-gray-400 focus:outline-none focus:ring-2 focus:ring-accent"/>
+                <button className="ml-4 px-4 py-3 bg-accent text-white rounded-lg hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary-dark"  onClick={handleSearch}>Search</button>
+                <button className="ml-4 px-4 py-3 bg-secondary text-white rounded-lg hover:bg-secondary-dark focus:outline-none focus:ring-2 focus:ring-secondary-dark" onClick={()=>{setIsProductsAreLoaded(false)}}>All Products</button>
             </div>
 
             {/* Table Container */}

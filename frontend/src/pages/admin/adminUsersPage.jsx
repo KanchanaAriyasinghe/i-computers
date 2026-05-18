@@ -145,7 +145,7 @@ export default function AdminUsersPage() {
                     </p>
                 </div>
                 <div className="flex items-center gap-4">
-                    <span className="text-sm text-accent opacity-90">
+                    <span className="text-sm text-secondary opacity-90">
                         Total Users:{" "}
                         <span className="font-semibold">{totalUsers}</span>
                     </span>
