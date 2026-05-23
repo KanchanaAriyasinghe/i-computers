@@ -320,7 +320,7 @@ function ReviewsSection({ productId }) {
             {loading ? (
                 <div className="flex justify-center py-10"><LoadingAnimation /></div>
             ) : reviews.length === 0 ? (
-                <div className="text-center py-12 text-gray-400">
+                <div className="text-center lg:py-12 mb-[160px] text-gray-400">
                     <p className="text-5xl mb-3">💬</p>
                     <p className="text-lg font-medium">No reviews yet</p>
                     <p className="text-sm">Be the first to review this product!</p>
@@ -487,7 +487,7 @@ export default function ProductOverviewPage() {
                                         <span className="text-gray-800 font-semibold">{product.category}</span>
                                     </span>
                                 </div>
-                                <p className="text-lg mt-5 mb-[160px] lg:mb-0">
+                                <p className="text-lg mt-5 lg:mb-0">
                                     {product.description}
                                 </p>
                                 <div className="flex mt-5 gap-5 fixed lg:static bottom-[82px] right-0 p-2 backdrop-blur-2xl lg:backdrop-blur-none w-full">
