@@ -156,10 +156,10 @@ const ContactPage = () => {
         <div className="absolute -top-12 -right-12 w-50 h-50 rounded-full bg-accent opacity-10 pointer-events-none" />
         <div className="absolute -bottom-20 -left-20 w-96 h-96 rounded-full bg-accent opacity-10 pointer-events-none" />
         <div className="relative z-10 max-w-4xl mx-auto px-6 py-16 text-center">
-          <span className="inline-block text-[11px] font-bold tracking-[4px] text-accent uppercase mb-3">
+          <span className=" text-5xl font-bold tracking-[4px] text-accent uppercase mb-3">
             Get In Touch
           </span>
-          <p className="text-slate-400 text-base max-w-md mx-auto">
+          <p className="text-lg text-gray-400 max-w-md mx-auto">
             We&apos;re here to help. Reach out through any channel below and we&apos;ll get back to you.
           </p>
         </div>
@@ -175,9 +175,9 @@ const ContactPage = () => {
                 {card.icon}
               </div>
               <div className="min-w-0">
-                <p className="text-[11px] font-bold text-secondary uppercase tracking-widest mb-1">{card.title}</p>
-                <p className="text-sm font-semibold text-slate-800 truncate">{card.main}</p>
-                <p className="text-xs text-slate-400 mt-0.5">{card.sub}</p>
+                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">{card.title}</p>
+                <p className="text-sm font-semibold text-gray-800">{card.main}</p>
+                <p className="text-xs text-gray-400 mt-0.5">{card.sub}</p>
                 {card.link && (
                   <a href="https://maps.google.com/?q=123+Galle+Road+Colombo" target="_blank" rel="noreferrer" className="text-xs text-accent font-semibold mt-1.5 inline-block hover:underline">
                     Get Directions →
@@ -193,7 +193,7 @@ const ContactPage = () => {
 
           {/* Form Card */}
           <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100">
-            <h2 className="text-xl font-extrabold text-secondary">Send Us a Message</h2>
+            <h2 className="text-xl font-bold text-secondary">Send Us a Message</h2>
             <div className="w-10 h-[3px] bg-accent rounded-full mt-2 mb-3" />
             <p className="text-sm text-slate-500 mb-6">
               Have a question or need help? Fill out the form and we&apos;ll get back to you.
@@ -303,7 +303,7 @@ const ContactPage = () => {
 
           {/* Map Card */}
           <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100">
-            <h2 className="text-xl font-extrabold text-secondary">Our Location</h2>
+            <h2 className="text-xl font-bold text-secondary">Our Location</h2>
             <div className="w-10 h-[3px] bg-accent rounded-full mt-2 mb-5" />
             <div className="rounded-xl overflow-hidden h-[340px] border border-slate-100">
               <iframe
@@ -322,7 +322,7 @@ const ContactPage = () => {
 
         {/* FAQ */}
         <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 mb-10">
-          <h2 className="text-xl font-extrabold text-secondary">Frequently Asked Questions</h2>
+          <h2 className="text-xl font-bold text-secondary">Frequently Asked Questions</h2>
           <div className="w-10 h-[3px] bg-accent rounded-full mt-2 mb-6" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {faqs.map((faq, i) => (
@@ -363,7 +363,7 @@ const ContactPage = () => {
               </svg>
             </div>
             <div>
-              <p className="text-white font-extrabold text-lg leading-tight">Still need help?</p>
+              <p className="text-white font-bold text-lg leading-tight">Still need help?</p>
               <p className="text-slate-400 text-sm mt-0.5">Chat with our support team on WhatsApp.</p>
             </div>
           </div>
