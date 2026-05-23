@@ -320,13 +320,13 @@ function ReviewsSection({ productId }) {
             {loading ? (
                 <div className="flex justify-center py-10"><LoadingAnimation /></div>
             ) : reviews.length === 0 ? (
-                <div className="text-center lg:py-12 mb-[160px] text-gray-400">
+                <div className="text-center lg:py-12  text-gray-400">
                     <p className="text-5xl mb-3">💬</p>
                     <p className="text-lg font-medium">No reviews yet</p>
                     <p className="text-sm">Be the first to review this product!</p>
                 </div>
             ) : (
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col mb-[160px] lg:mb-0 gap-4">
                     {reviews.map(review => (
                         <div key={review._id} className="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md transition-shadow">
                             <div className="flex items-start justify-between gap-3 flex-wrap">
