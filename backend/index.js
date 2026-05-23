@@ -20,12 +20,7 @@ mongoose.connect(mongodbURI).then(
         console.log("connected to mongoDB")
     }
 )
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: false
-}));
+app.use(cors())
 app.use(express.json())
 // call middleware 
 app.use (authenticateUser)
@@ -48,5 +43,4 @@ app.use("/api/products", productRouter)
 app.use("/api/orders", orderRouter)
 app.use("/api/reviews", reviewRouter)
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, ()=>{console.log(`server is running on port ${PORT}`)});
+app.listen(3000, ()=>{console.log("server is running on port 3000")});
