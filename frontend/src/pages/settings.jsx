@@ -95,67 +95,68 @@ export default function SettingsPage() {
     }
 
 	return (
-		<div className="w-full h-full flex items-center justify-center gap-6">
-			{user ? (
-				<>
-					<div className="w-[400px] h-[400px] bg-white shadow-lg p-6">
-						<h1 className="text-2xl font-bold mb-4">Basic Information</h1>
-						<div className="mb-4">
-							<label className="block text-gray-700 mb-2">First Name</label>
-							<input
-								value={firstName}
-								onChange={(e) => setFirstName(e.target.value)}
-								className="w-full p-2 border border-gray-300 rounded"
-							/>
-						</div>
-						<div className="mb-4">
-							<label className="block text-gray-700 mb-2">Last Name</label>
-							<input
-								value={lastName}
-								onChange={(e) => setLastName(e.target.value)}
-								className="w-full p-2 border border-gray-300 rounded"
-							/>
-						</div>
-						<div className="mb-4">
-							<label className="block text-gray-700 mb-2">Profile Image</label>
-							<input
-								type="file"
-								onChange={(e) => setImageFile(e.target.files[0])}
-								className="w-full p-2 border border-gray-300 rounded"
-							/>
-						</div>
-						<button onClick={updateProfile} className="px-4 py-2 bg-accent text-white rounded" disabled={isUpdatingProfile}>
-							{isUpdatingProfile ? "Updating..." : "Update Profile"}
-						</button>
-					</div>
-					<div className="w-[400px] h-[400px] bg-white shadow-lg p-6 relative">
-                        <h1 className="text-2xl font-bold mb-4">Change Password</h1>
-                        <div className="mb-4">
-                            <label className="block text-gray-700 mb-2">New Password</label>
-                            <input
-                                type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="w-full p-2 border border-gray-300 rounded"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-gray-700 mb-2">Confirm Password</label>
-                            <input
-                                type="password"
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                                className="w-full p-2 border border-gray-300 rounded"
-                            />
-                        </div>
-                        <button onClick={updatePassword} disabled={isUpdatingPassword} className="px-4 py-2 absolute bottom-6 bg-accent text-white rounded">
-                            {isUpdatingPassword ? "Updating..." : "Update Password"}
-                        </button>
-                    </div>
-				</>
-			) : (
-				<LoadingAnimation />
-			)}
-		</div>
-	);
+  <div className="w-full h-full flex flex-col lg:flex-row items-center justify-center gap-6 px-4 lg:px-0 py-[350px] lg:py-0 pb-24 lg:pb-0 overflow-y-auto lg:overflow-visible">
+    {user ? (
+      <>
+        <div className="w-full lg:w-[400px] lg:h-[400px] mx-auto lg:mx-0 bg-white shadow-lg p-6 lg:rounded-none rounded-lg ">
+          <h1 className="text-2xl font-bold mb-4">Basic Information</h1>
+          <div className="mb-4">
+            <label className="block text-gray-700 mb-2">First Name</label>
+            <input
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 mb-2">Last Name</label>
+            <input
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 mb-2">Profile Image</label>
+            <input
+              type="file"
+              onChange={(e) => setImageFile(e.target.files[0])}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+          </div>
+          <button onClick={updateProfile} className="px-4 py-2 bg-accent text-white rounded" disabled={isUpdatingProfile}>
+            {isUpdatingProfile ? "Updating..." : "Update Profile"}
+          </button>
+        </div>
+
+        <div className="w-full lg:w-[400px] lg:h-[400px] mx-auto lg:mx-0 bg-white shadow-lg p-6 lg:rounded-none rounded-lg relative">
+          <h1 className="text-2xl font-bold mb-4">Change Password</h1>
+          <div className="mb-4">
+            <label className="block text-gray-700 mb-2">New Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 mb-2">Confirm Password</label>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+          </div>
+          <button onClick={updatePassword} disabled={isUpdatingPassword} className="px-4 py-2 mt-2 lg:mt-0 lg:absolute lg:bottom-6 bg-accent text-white rounded">
+            {isUpdatingPassword ? "Updating..." : "Update Password"}
+          </button>
+        </div>
+      </>
+    ) : (
+      <LoadingAnimation />
+    )}
+  </div>
+);
 }

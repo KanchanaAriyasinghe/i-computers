@@ -12,6 +12,7 @@ export default function LoginPage(){
     const navigate = useNavigate()
     const googleLogin = useGoogleLogin(
         {
+            ux_mode: "redirect",
             onSuccess: (response)=>{
                 api.post("/users/google-login",{
                     token : response.access_token
