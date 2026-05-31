@@ -24,12 +24,12 @@ export default function CustomerOrderDetailsModal(props){
             {
                 isModalOpen&&
                 <div className="w-screen h-screen fixed bg-black/30 top-0 left-0 flex justify-center items-center text-secondary z-99">
-                    <div className="w-[800px]  bg-white flex flex-col justify-center items-center rounded-lg p-4 relative">
+                    <div className="lg:w-[800px]  w-[95%] bg-white flex flex-col justify-center items-center lg:px-0 px-4 rounded-lg p-4 relative">
 
                         <button className="absolute top-2 right-2 text-gray-500 cursor-pointer hover:text-red-700" onClick={()=>setIsModalOpen(false)}>X</button>
 
-                        <div className="w-full ">
-                            <div className="w-full flex  items-center">
+                        <div className="w-full lg:px-4">
+                            <div className="w-full flex  flex-wrap gap-2 items-center">
                                <span className="inline-block rounded-md bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
 													{order.orderId}
 							    </span>
@@ -49,7 +49,7 @@ export default function CustomerOrderDetailsModal(props){
                                     <p className="text-gray-800"><span className="font-semibold">{order.firstName} {order.lastName}</span>, {order.addressLineOne} {order.addressLineTwo} , {order.city} , {order.state} , {order.postalCode}</p>
                                 </div>                                
                             </div>
-                            <div className="w-full flex gap-2 items-center mt-2 pb-2">
+                            <div className="w-full flex flex-wrap gap-2 items-center mt-2 pb-2">
                                 <span className="text-gray-600">Order Date: {new Date(order.date).toLocaleDateString()}</span>
                                 {/* status */}
                                 <span className="inline-block rounded-full bg-blue-50 text-blue-600 px-3 py-1 text-xs font-medium">
@@ -62,14 +62,14 @@ export default function CustomerOrderDetailsModal(props){
                                 <p className="text-gray-600">{order.notes}</p>
                             </div>
                         </div>
-                        <div className="w-full h-[250px]  flex flex-col overflow-y-scroll items-center p-4">
+                        <div className="w-full lg:h-[250px]  flex flex-col max-h-[90vh] overflow-y-auto lg:overflow-y-scroll items-center p-4">
                             {
                                 order.items.map(
                                     (item , index)=>{
                                         return(
                                             <div key={index} className="w-full flex justify-between items-center bg-gray-100 rounded-lg p-2 mb-2">
                                                 <div className="flex items-center gap-4">
-                                                    <img className="w-[80px] h-[80px] object-cover rounded-lg" src={item.product.image}/>
+                                                    <img className="lg:w-[80px] lg:h-[80px] w-[60px] h-[60px] object-cover rounded-lg" src={item.product.image}/>
                                                     <div className="flex flex-col gap-1">
                                                         <span className="font-semibold text-gray-800">{item.product.name}</span>
                                                         <span className="text-sm text-gray-500">Quantity: {item.quantity}</span>
