@@ -318,9 +318,9 @@ function ReviewsSection({ productId }) {
 
             {/* Reviews List */}
             {loading ? (
-                <div className="flex justify-center lg:py-10 mb-[160px]"><LoadingAnimation /></div>
+                <div className="flex justify-center lg:py-10 "><LoadingAnimation /></div>
             ) : reviews.length === 0 ? (
-                <div className="text-center lg:py-12  text-gray-400">
+                <div className="text-center lg:py-12  text-gray-400 lg:mb-0 mb-[100px]">
                     <p className="text-5xl mb-3">💬</p>
                     <p className="text-lg font-medium">No reviews yet</p>
                     <p className="text-sm">Be the first to review this product!</p>
