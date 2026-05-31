@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Test Suite">
+    <test verbose="2" name="register pages test 1">
+        <parameter name="firstName" value="sachini"/>
+        <parameter name="lastName" value="ariyasinghe"/>
+        <parameter name="email" value="wpremalatha1@gmail.com"/>
+        <parameter name="password" value="sachini@1997"/>
+        <parameter name="confirmPassword" value="sachini@1997"/>
+        <parameter name="wrongConfirmPassword" value="sachini@2000"/>
+        <classes>
+            <class name="tests.RegisterTest"/>
+        </classes>
+    </test>
+    <test verbose="2" name="login pages test 1">
+        <parameter name="email" value="ariyasinghekanchana@gmail.com"/>
+        <parameter name="password" value="1234"/>
+        <parameter name="wrongPassword" value="2000"/>
+        <classes>
+            <class name="tests.LoginTest"/>
+        </classes>
+    </test>
+
+
+</suite>
