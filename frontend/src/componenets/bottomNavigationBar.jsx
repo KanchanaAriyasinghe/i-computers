@@ -2,6 +2,7 @@ import { GoHome } from "react-icons/go";
 import { Link } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
 import { CiShoppingCart } from "react-icons/ci";
+import { LuMessageCircleMore } from "react-icons/lu";
 import UserData from "./userData";
 
 export default function BottomNavigationBar(){
@@ -16,6 +17,10 @@ export default function BottomNavigationBar(){
             <Link to="/cart" className="h-full aspect-square flex justify-center items-center rounded-lg text-accent text-3xl shadow-2xl shadow-accent">
                 <CiShoppingCart />
             </Link>
+            <Link to="/contact-us" className="h-full aspect-square flex justify-center items-center rounded-lg text-accent text-3xl shadow-2xl shadow-accent">
+                <LuMessageCircleMore />
+            </Link>
+
             <UserData className="h-full aspect-square flex justify-center items-center rounded-lg text-accent text-3xl shadow-2xl shadow-accent"/>
         </div>
     )

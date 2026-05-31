@@ -95,7 +95,7 @@ export default function SettingsPage() {
     }
 
 	return (
-  <div className="w-full h-full flex flex-col lg:flex-row items-center justify-center gap-6 px-4 lg:px-0 py-[350px] lg:py-0 pb-24 lg:pb-0 overflow-y-auto lg:overflow-visible">
+  <div className="w-full h-full flex flex-col lg:flex-row items-center justify-center gap-6 px-4 lg:px-0  lg:py-0 pb-24 lg:pb-0 overflow-y-auto lg:overflow-visible">
     {user ? (
       <>
         <div className="w-full lg:w-[400px] lg:h-[400px] mx-auto lg:mx-0 bg-white shadow-lg p-6 lg:rounded-none rounded-lg ">

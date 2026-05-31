@@ -318,7 +318,7 @@ function ReviewsSection({ productId }) {
 
             {/* Reviews List */}
             {loading ? (
-                <div className="flex justify-center py-10"><LoadingAnimation /></div>
+                <div className="flex justify-center lg:py-10 mb-[160px]"><LoadingAnimation /></div>
             ) : reviews.length === 0 ? (
                 <div className="text-center lg:py-12  text-gray-400">
                     <p className="text-5xl mb-3">💬</p>
