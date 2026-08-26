@@ -15,6 +15,67 @@ export default function CreateOrderModal(props){
 
     const cart = props.cart
 
+    function startPayHerePayment(paymentData, userData, order) {
+
+    const form = document.createElement("form")
+
+    form.method = "POST"
+
+    form.action = "https://sandbox.payhere.lk/pay/checkout"
+
+    const fields = {
+
+        merchant_id : paymentData.merchant_id,
+
+        return_url : `${window.location.origin}/payment-success`,
+
+        cancel_url : `${window.location.origin}/payment-cancel`,
+
+        notify_url : `${import.meta.env.VITE_API_URL}/orders/payment/notify`,
+
+        first_name : userData.firstName,
+
+        last_name : userData.lastName,
+
+        email : userData.email,
+
+        phone : order.phone,
+
+        address : `${order.addressLineOne} ${order.adressLineTwo || ""}`,
+
+        city : order.city,
+
+        country : "Sri Lanka",
+
+        order_id : paymentData.order_id,
+
+        items : "I-Computers Order",
+
+        currency : paymentData.currency,
+
+        amount : paymentData.amount,
+
+        hash : paymentData.hash
+    }
+
+    Object.entries(fields).forEach(([key, value]) => {
+
+        const input = document.createElement("input")
+
+        input.type = "hidden"
+
+        input.name = key
+
+        input.value = value
+
+        form.appendChild(input)
+    })
+
+    document.body.appendChild(form)
+
+    form.submit()
+}
+
     async function createOrder(){
         try{
 

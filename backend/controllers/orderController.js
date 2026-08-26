@@ -1,5 +1,6 @@
 import Order from "../models/order.js"
 import Product from "../models/product.js"
+import crypto from "crypto"
 
 export default async function createOrder(req, res){
     const user = req.user
@@ -95,12 +96,46 @@ export default async function createOrder(req, res){
 
         //console.log(result)
 
+        const merchantId = process.env.PAYHERE_MERCHANT_ID
+        const merchantSecret = process.env.PAYHERE_MERCHANT_SECRET
+
+        const amount = Number(orderData.total).toFixed(2)
+        const currency = "LKR"
+
+        const hashedSecret = crypto
+            .createHash("md5")
+            .update(merchantSecret)
+            .digest("hex")
+            .toUpperCase()
+
+        const hash = crypto
+            .createHash("md5")
+            .update(
+                merchantId +
+                orderData.orderId +
+                amount +
+                currency +
+                hashedSecret
+            )
+            .digest("hex")
+            .toUpperCase()
+
         res.status(201).json({
-            message : "Order placed successfully"
+            message : "Order placed successfully",
+
+            order : {
+                orderId : orderData.orderId,
+                total : orderData.total
+            },
+
+            payment : {
+                merchant_id : merchantId,
+                order_id : orderData.orderId,
+                amount : amount,
+                currency : currency,
+                hash : hash
+            }
         })
-
-
-
 
     }catch(error){
         console.log(error)
@@ -190,5 +225,95 @@ export async function updateOrderStatusAndNotes(req,res){
          res.status(403).json({
             message : "You are not authorized to perform this action"
         })
+    }
+}
+
+export async function payhereNotify(req, res) {
+
+    try {
+
+        const {
+            merchant_id,
+            order_id,
+            payment_id,
+            payhere_amount,
+            payhere_currency,
+            status_code,
+            md5sig
+        } = req.body
+
+        const merchantSecret = process.env.PAYHERE_MERCHANT_SECRET
+
+        const hashedSecret = crypto
+            .createHash("md5")
+            .update(merchantSecret)
+            .digest("hex")
+            .toUpperCase()
+
+        const localMd5sig = crypto
+            .createHash("md5")
+            .update(
+                merchant_id +
+                order_id +
+                payhere_amount +
+                payhere_currency +
+                status_code +
+                hashedSecret
+            )
+            .digest("hex")
+            .toUpperCase()
+
+        if (localMd5sig !== md5sig) {
+
+            console.log("Invalid PayHere payment notification")
+
+            res.status(400).send("Invalid signature")
+
+            return
+        }
+
+        const order = await Order.findOne({
+            orderId : order_id
+        })
+
+        if (order == null) {
+
+            res.status(404).send("Order not found")
+
+            return
+        }
+
+        if (status_code === "2") {
+
+            order.paymentStatus = "Paid"
+
+            order.paymentId = payment_id
+
+            await order.save()
+
+            console.log(
+                "Payment successful for order:",
+                order_id
+            )
+
+        } else {
+
+            order.paymentStatus = "Failed"
+
+            await order.save()
+
+            console.log(
+                "Payment failed for order:",
+                order_id
+            )
+        }
+
+        res.send("OK")
+
+    } catch(error) {
+
+        console.log(error)
+
+        res.status(500).send("Payment notification error")
     }
 }
