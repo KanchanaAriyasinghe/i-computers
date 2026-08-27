@@ -15,50 +15,124 @@ export default function CreateOrderModal(props){
 
     const cart = props.cart
 
-    async function createOrder(){
-        try{
+    function startPayHerePayment(paymentData, userData, order) {
 
-            const token = localStorage.getItem("token")
+    const form = document.createElement("form")
 
-            const data = {
-                firstName,
-                lastName,
-                addressLineOne,
-                addressLineTwo,
-                city,
-                state,
-                postalCode,
-                phone,
-                items : []
-            }
+    form.method = "POST"
 
-            for (let i=0; i<cart.length ; i++){
-                const item = cart[i]
-                data.items.push(
-                    {
-                        productId : item.product.productId,
-                        quantity : item.quantity
-                    }
-                )
-            }
+    form.action = "https://sandbox.payhere.lk/pay/checkout"
 
-            await api.post("/orders" , data, {
-                headers : {
-                    Authorization : "Bearer " + token
-                }
-            })
+    const fields = {
 
-            //alert(result.data.message)
-            toast.success("Order created successfully!")
-            setIsModalOpen(false)
+        merchant_id : paymentData.merchant_id,
 
+        return_url : `${window.location.origin}/payment-success`,
 
+        cancel_url : `${window.location.origin}/payment-cancel`,
 
-        }catch(error){
-            console.log(error)
-            toast.error(error?.response?.data?.message || "An error occurred while creating the order.")
-        }
+        notify_url : `${import.meta.env.VITE_API_URL}/orders/payment/notify`,
+
+        first_name : userData.firstName,
+
+        last_name : userData.lastName,
+
+        email : userData.email,
+
+        phone : order.phone,
+
+        address : `${order.addressLineOne} ${order.addressLineTwo || ""}`,
+
+        city : order.city,
+
+        country : "Sri Lanka",
+
+        order_id : paymentData.order_id,
+
+        items : "I-Computers Order",
+
+        currency : paymentData.currency,
+
+        amount : paymentData.amount,
+
+        hash : paymentData.hash
     }
+
+    Object.entries(fields).forEach(([key, value]) => {
+
+        const input = document.createElement("input")
+
+        input.type = "hidden"
+
+        input.name = key
+
+        input.value = value
+
+        form.appendChild(input)
+    })
+
+    document.body.appendChild(form)
+
+    form.submit()
+}
+
+async function createOrder() {
+    try {
+        const token = localStorage.getItem("token")
+
+        const data = {
+            firstName,
+            lastName,
+            addressLineOne,
+            addressLineTwo,
+            city,
+            state,
+            postalCode,
+            phone,
+            items: []
+        }
+
+        for (let i = 0; i < cart.length; i++) {
+            const item = cart[i]
+
+            data.items.push({
+                productId: item.product.productId,
+                quantity: item.quantity
+            })
+        }
+
+        const result = await api.post("/orders", data, {
+            headers: {
+                Authorization: "Bearer " + token
+            }
+        })
+
+        console.log("Backend response:", result.data)
+
+        startPayHerePayment(
+            result.data.payment,
+            {
+                firstName: result.data.order.firstName,
+                lastName: result.data.order.lastName,
+                email: result.data.order.email
+            },
+            {
+                phone: result.data.order.phone,
+                addressLineOne: result.data.order.addressLineOne,
+                addressLineTwo: result.data.order.addressLineTwo,
+                city: result.data.order.city
+            }
+        )
+
+    } catch (error) {
+        console.log(error)
+
+        toast.error(
+            error?.response?.data?.message ||
+            "An error occurred while creating the order."
+        )
+    }
+}
 
     return(
         <>

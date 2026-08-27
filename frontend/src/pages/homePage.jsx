@@ -10,6 +10,8 @@ import BottomNavigationBar from "../componenets/bottomNavigationBar";
 import NotFoundPage from "./notFoundPage";
 import LandingPage from "./landingPage";
 import ContactPage from "./contactPage";
+import PaymentSuccess from "./paymentSuccess"
+import PaymentCancel from "./paymentCancel"
 
 export default function HomePage(){
     return(
@@ -27,6 +29,8 @@ export default function HomePage(){
                     <Route path="/settings" element={<SettingsPage/>}/>
                     <Route path="/checkout" element={<CheckoutPage/>}/>
                     <Route path="/*" element={<NotFoundPage/>}/>
+                    <Route path="/payment-success" element={<PaymentSuccess />}/>
+                    <Route path="/payment-cancel" element={<PaymentCancel />}/>
                 </Routes>
 
                 <BottomNavigationBar/>
