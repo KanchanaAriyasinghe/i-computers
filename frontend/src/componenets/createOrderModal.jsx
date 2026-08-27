@@ -76,72 +76,63 @@ export default function CreateOrderModal(props){
     form.submit()
 }
 
-    async function createOrder(){
+async function createOrder() {
+    try {
+        const token = localStorage.getItem("token")
 
-        try{
-
-            const token = localStorage.getItem("token")
-
-            const data = {
-                firstName,
-                lastName,
-                addressLineOne,
-                addressLineTwo,
-                city,
-                state,
-                postalCode,
-                phone,
-                items : []
-            }
-
-            for(let i = 0; i < cart.length; i++){
-
-                const item = cart[i]
-
-                data.items.push({
-                    productId : item.product.productId,
-                    quantity : item.quantity
-                })
-            }
-
-            const result = await api.post("/orders", data, {
-                headers : {
-                    Authorization : "Bearer " + token
-                }
-            })
-
-            console.log("Backend response:", result.data)
-
-            const paymentData = result.data.payment
-            const orderData = result.data.order
-
-            const userData = {
-                firstName : orderData.firstName,
-                lastName : orderData.lastName,
-                email : orderData.email
-            }
-
-            
-            startPayHerePayment(
-                paymentData,
-                userData,
-                {
-                    ...data,
-                    orderId : orderData.orderId,
-                    total : orderData.total
-                }
-            )
-
-        }catch(error){
-
-            console.log(error)
-
-            toast.error(
-                error?.response?.data?.message ||
-                "An error occurred while creating the order."
-            )
+        const data = {
+            firstName,
+            lastName,
+            addressLineOne,
+            addressLineTwo,
+            city,
+            state,
+            postalCode,
+            phone,
+            items: []
         }
+
+        for (let i = 0; i < cart.length; i++) {
+            const item = cart[i]
+
+            data.items.push({
+                productId: item.product.productId,
+                quantity: item.quantity
+            })
+        }
+
+        const result = await api.post("/orders", data, {
+            headers: {
+                Authorization: "Bearer " + token
+            }
+        })
+
+        console.log("Backend response:", result.data)
+
+        startPayHerePayment(
+            result.data.payment,
+            {
+                firstName: result.data.order.firstName,
+                lastName: result.data.order.lastName,
+                email: result.data.order.email
+            },
+            {
+                phone: result.data.order.phone,
+                addressLineOne: result.data.order.addressLineOne,
+                addressLineTwo: result.data.order.addressLineTwo,
+                city: result.data.order.city
+            }
+        )
+
+    } catch (error) {
+        console.log(error)
+
+        toast.error(
+            error?.response?.data?.message ||
+            "An error occurred while creating the order."
+        )
     }
+}
 
     return(
         <>

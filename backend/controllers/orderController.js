@@ -121,29 +121,28 @@ export default async function createOrder(req, res){
             .toUpperCase()
 
         res.status(201).json({
-        message: "Order created successfully",
+            message: "Order placed successfully",
 
-        order: {
-            orderId: orderData.orderId,
-            total: orderData.total,
-            firstName: orderData.firstName,
-            lastName: orderData.lastName,
-            email: orderData.email,
-            phone: orderData.phone,
-            addressLineOne: orderData.addressLineOne,
-            addressLineTwo: orderData.addressLineTwo,
-            city: orderData.city
-        },
+            order: {
+                orderId: orderData.orderId,
+                total: orderData.total,
+                firstName: orderData.firstName,
+                lastName: orderData.lastName,
+                email: orderData.email,
+                addressLineOne: orderData.addressLineOne,
+                addressLineTwo: orderData.addressLineTwo,
+                city: orderData.city,
+                phone: orderData.phone
+            },
 
-        payment: {
-            merchant_id: merchantId,
-            order_id: orderData.orderId,
-            amount: amount,
-            currency: currency,
-            hash: hash
-        }
-    })
-
+            payment: {
+                merchant_id: merchantId,
+                order_id: orderData.orderId,
+                amount: amount,
+                currency: currency,
+                hash: hash
+            }
+        })
     }catch(error){
         console.log(error)
         res.status(500).json({
