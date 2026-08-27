@@ -43,7 +43,7 @@ const orderSchema = new mongoose.Schema(
             required : true,
             default : "Pending" //Shiped, Completed, Cancelled
         },
-            paymentStatus : {
+        paymentStatus : {
             type : String,
             required : true,
             default : "Pending"
@@ -88,6 +88,11 @@ const orderSchema = new mongoose.Schema(
                         type : Number,
                         required : true
                     },
+                    // Renamed from "labelledPrice" to match the field the
+                    // controller actually writes ("labeledPrice" on the
+                    // Product model -> stored here as "labelledPrice").
+                    // Keeping the schema key as "labelledPrice" so it lines
+                    // up with orderController.js's orderData.items push.
                     labelledPrice : {
                         type : Number,
                     },
