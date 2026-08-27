@@ -23,7 +23,7 @@ const orderSchema = new mongoose.Schema(
             type : String,
             required : true
         },
-        adressLineTwo : {
+        addressLineTwo : {
             type : String,
         },
         city : {
@@ -42,6 +42,20 @@ const orderSchema = new mongoose.Schema(
             type : String,
             required : true,
             default : "Pending" //Shiped, Completed, Cancelled
+        },
+            paymentStatus : {
+            type : String,
+            required : true,
+            default : "Pending"
+        },
+
+        paymentId : {
+            type : String
+        },
+
+        paymentMethod : {
+            type : String,
+            default : "PayHere"
         },
         notes : {
             type : String,

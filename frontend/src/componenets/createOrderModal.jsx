@@ -15,7 +15,69 @@ export default function CreateOrderModal(props){
 
     const cart = props.cart
 
+    function startPayHerePayment(paymentData, userData, order) {
+
+    const form = document.createElement("form")
+
+    form.method = "POST"
+
+    form.action = "https://sandbox.payhere.lk/pay/checkout"
+
+    const fields = {
+
+        merchant_id : paymentData.merchant_id,
+
+        return_url : `${window.location.origin}/payment-success`,
+
+        cancel_url : `${window.location.origin}/payment-cancel`,
+
+        notify_url : `${import.meta.env.VITE_API_URL}/orders/payment/notify`,
+
+        first_name : userData.firstName,
+
+        last_name : userData.lastName,
+
+        email : userData.email,
+
+        phone : order.phone,
+
+        address : `${order.addressLineOne} ${order.addressLineTwo || ""}`,
+
+        city : order.city,
+
+        country : "Sri Lanka",
+
+        order_id : paymentData.order_id,
+
+        items : "I-Computers Order",
+
+        currency : paymentData.currency,
+
+        amount : paymentData.amount,
+
+        hash : paymentData.hash
+    }
+
+    Object.entries(fields).forEach(([key, value]) => {
+
+        const input = document.createElement("input")
+
+        input.type = "hidden"
+
+        input.name = key
+
+        input.value = value
+
+        form.appendChild(input)
+    })
+
+    document.body.appendChild(form)
+
+    form.submit()
+}
+
     async function createOrder(){
+
         try{
 
             const token = localStorage.getItem("token")
@@ -32,31 +94,51 @@ export default function CreateOrderModal(props){
                 items : []
             }
 
-            for (let i=0; i<cart.length ; i++){
+            for(let i = 0; i < cart.length; i++){
+
                 const item = cart[i]
-                data.items.push(
-                    {
-                        productId : item.product.productId,
-                        quantity : item.quantity
-                    }
-                )
+
+                data.items.push({
+                    productId : item.product.productId,
+                    quantity : item.quantity
+                })
             }
 
-            await api.post("/orders" , data, {
+            const result = await api.post("/orders", data, {
                 headers : {
                     Authorization : "Bearer " + token
                 }
             })
 
-            //alert(result.data.message)
-            toast.success("Order created successfully!")
-            setIsModalOpen(false)
+            console.log("Backend response:", result.data)
 
+            const paymentData = result.data.payment
+            const orderData = result.data.order
 
+            const userData = {
+                firstName : orderData.firstName,
+                lastName : orderData.lastName,
+                email : orderData.email
+            }
+
+            startPayHerePayment(
+                paymentData,
+                userData,
+                {
+                    ...data,
+                    orderId : orderData.orderId,
+                    total : orderData.total
+                }
+            )
 
         }catch(error){
+
             console.log(error)
-            toast.error(error?.response?.data?.message || "An error occurred while creating the order.")
+
+            toast.error(
+                error?.response?.data?.message ||
+                "An error occurred while creating the order."
+            )
         }
     }
 
