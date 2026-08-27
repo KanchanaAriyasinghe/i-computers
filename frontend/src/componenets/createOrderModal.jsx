@@ -41,7 +41,7 @@ export default function CreateOrderModal(props){
 
         phone : order.phone,
 
-        address : `${order.addressLineOne} ${order.adressLineTwo || ""}`,
+        address : `${order.addressLineOne} ${order.addressLineTwo || ""}`,
 
         city : order.city,
 
@@ -77,6 +77,7 @@ export default function CreateOrderModal(props){
 }
 
     async function createOrder(){
+
         try{
 
             const token = localStorage.getItem("token")
@@ -93,31 +94,51 @@ export default function CreateOrderModal(props){
                 items : []
             }
 
-            for (let i=0; i<cart.length ; i++){
+            for(let i = 0; i < cart.length; i++){
+
                 const item = cart[i]
-                data.items.push(
-                    {
-                        productId : item.product.productId,
-                        quantity : item.quantity
-                    }
-                )
+
+                data.items.push({
+                    productId : item.product.productId,
+                    quantity : item.quantity
+                })
             }
 
-            await api.post("/orders" , data, {
+            const result = await api.post("/orders", data, {
                 headers : {
                     Authorization : "Bearer " + token
                 }
             })
 
-            //alert(result.data.message)
-            toast.success("Order created successfully!")
-            setIsModalOpen(false)
+            console.log("Backend response:", result.data)
 
+            const paymentData = result.data.payment
+            const orderData = result.data.order
 
+            const userData = {
+                firstName : orderData.firstName,
+                lastName : orderData.lastName,
+                email : orderData.email
+            }
+
+            startPayHerePayment(
+                paymentData,
+                userData,
+                {
+                    ...data,
+                    orderId : orderData.orderId,
+                    total : orderData.total
+                }
+            )
 
         }catch(error){
+
             console.log(error)
-            toast.error(error?.response?.data?.message || "An error occurred while creating the order.")
+
+            toast.error(
+                error?.response?.data?.message ||
+                "An error occurred while creating the order."
+            )
         }
     }
 

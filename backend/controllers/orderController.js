@@ -20,7 +20,7 @@ export default async function createOrder(req, res){
         firstName : user.firstName,
         lastName : user.lastName,
         addressLineOne : req.body.addressLineOne,
-        adressLineTwo : req.body.adressLineTwo,
+        addressLineTwo : req.body.addressLineTwo,
         city : req.body.city,
         state : req.body.state,
         postalCode : req.body.postalCode,
@@ -121,21 +121,28 @@ export default async function createOrder(req, res){
             .toUpperCase()
 
         res.status(201).json({
-            message : "Order placed successfully",
+        message: "Order created successfully",
 
-            order : {
-                orderId : orderData.orderId,
-                total : orderData.total
-            },
+        order: {
+            orderId: orderData.orderId,
+            total: orderData.total,
+            firstName: orderData.firstName,
+            lastName: orderData.lastName,
+            email: orderData.email,
+            phone: orderData.phone,
+            addressLineOne: orderData.addressLineOne,
+            addressLineTwo: orderData.addressLineTwo,
+            city: orderData.city
+        },
 
-            payment : {
-                merchant_id : merchantId,
-                order_id : orderData.orderId,
-                amount : amount,
-                currency : currency,
-                hash : hash
-            }
-        })
+        payment: {
+            merchant_id: merchantId,
+            order_id: orderData.orderId,
+            amount: amount,
+            currency: currency,
+            hash: hash
+        }
+    })
 
     }catch(error){
         console.log(error)
