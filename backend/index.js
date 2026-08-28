@@ -22,7 +22,6 @@ mongoose.connect(mongodbURI).then(
 )
 app.use(cors())
 app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
 // call middleware 
 app.use (authenticateUser)
 

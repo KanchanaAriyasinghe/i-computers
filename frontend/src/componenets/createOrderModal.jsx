@@ -12,88 +12,12 @@ export default function CreateOrderModal(props){
     const [state , setState] = useState("")
     const [postalCode , setPostalCode] = useState("")
     const [phone , setPhone] = useState("")
-    const [isPlacingOrder, setIsPlacingOrder] = useState(false)
 
     const cart = props.cart
 
-    function startPayHerePayment(paymentData, userData, order) {
+    async function createOrder(){
+        try{
 
-        const form = document.createElement("form")
-
-        form.method = "POST"
-
-        form.action = "https://sandbox.payhere.lk/pay/checkout"
-
-        const fields = {
-
-            merchant_id : paymentData.merchant_id,
-
-            return_url : `${window.location.origin}/payment-success`,
-
-            cancel_url : `${window.location.origin}/payment-cancel`,
-
-            notify_url : `${import.meta.env.VITE_API_URL}/orders/payment/notify`,
-
-            first_name : userData.firstName,
-
-            last_name : userData.lastName,
-
-            email : userData.email,
-
-            phone : order.phone,
-
-            address : `${order.addressLineOne} ${order.addressLineTwo || ""}`,
-
-            city : order.city,
-
-            country : "Sri Lanka",
-
-            order_id : paymentData.order_id,
-
-            items : "I-Computers Order",
-
-            currency : paymentData.currency,
-
-            amount : paymentData.amount,
-
-            hash : paymentData.hash
-        }
-
-        Object.entries(fields).forEach(([key, value]) => {
-
-            const input = document.createElement("input")
-
-            input.type = "hidden"
-
-            input.name = key
-
-            input.value = value
-
-            form.appendChild(input)
-        })
-
-        document.body.appendChild(form)
-
-        form.submit()
-    }
-
-    async function createOrder() {
-
-        // Basic client-side validation so we don't even hit the backend
-        // with an incomplete address
-        if(!addressLineOne || !city || !state || !postalCode || !phone){
-            toast.error("Please fill in all required shipping fields.")
-            return
-        }
-
-        if(!cart || cart.length === 0){
-            toast.error("Your cart is empty.")
-            return
-        }
-
-        setIsPlacingOrder(true)
-
-        try {
             const token = localStorage.getItem("token")
 
             const data = {
@@ -105,62 +29,34 @@ export default function CreateOrderModal(props){
                 state,
                 postalCode,
                 phone,
-                items: []
+                items : []
             }
 
-            for (let i = 0; i < cart.length; i++) {
+            for (let i=0; i<cart.length ; i++){
                 const item = cart[i]
-
-                data.items.push({
-                    productId: item.product.productId,
-                    quantity: item.quantity
-                })
+                data.items.push(
+                    {
+                        productId : item.product.productId,
+                        quantity : item.quantity
+                    }
+                )
             }
 
-            const result = await api.post("/orders", data, {
-                headers: {
-                    Authorization: "Bearer " + token
+            await api.post("/orders" , data, {
+                headers : {
+                    Authorization : "Bearer " + token
                 }
             })
 
-            console.log("Backend response:", result.data)
+            //alert(result.data.message)
+            toast.success("Order created successfully!")
+            setIsModalOpen(false)
 
-            // Defensive check: if the backend didn't return order/payment
-            // (e.g. misconfigured server, stale deployment), show a clear
-            // error instead of crashing on result.data.order.firstName
-            if (!result.data || !result.data.order || !result.data.payment) {
-                console.log("Unexpected response shape:", result.data)
-                toast.error(
-                    "Something went wrong creating your order. Please try again or contact support."
-                )
-                setIsPlacingOrder(false)
-                return
-            }
 
-            startPayHerePayment(
-                result.data.payment,
-                {
-                    firstName: result.data.order.firstName,
-                    lastName: result.data.order.lastName,
-                    email: result.data.order.email
-                },
-                {
-                    phone: result.data.order.phone,
-                    addressLineOne: result.data.order.addressLineOne,
-                    addressLineTwo: result.data.order.addressLineTwo,
-                    city: result.data.order.city
-                }
-            )
 
-        } catch (error) {
+        }catch(error){
             console.log(error)
-
-            toast.error(
-                error?.response?.data?.message ||
-                "An error occurred while creating the order."
-            )
-        } finally {
-            setIsPlacingOrder(false)
+            toast.error(error?.response?.data?.message || "An error occurred while creating the order.")
         }
     }
 
@@ -183,13 +79,9 @@ export default function CreateOrderModal(props){
                     <input type="text" placeholder="Phone" className="w-full border p-2 rounded" value={phone} onChange={(e) => setPhone(e.target.value)} />
                     <div className="w-full flex flex-row justify-between items-center">
                         <button className="bg-gray-500 text-white px-4 py-2 rounded-lg font-semibold cursor-pointer" onClick={() => setIsModalOpen(false)}>Cancel</button>
-                        <button
-                            className="bg-green-500 text-white px-4 py-2 rounded-lg font-semibold cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
-                            onClick={createOrder}
-                            disabled={isPlacingOrder}
-                        >
-                            {isPlacingOrder ? "Placing order..." : "Place Order"}
-                        </button>
+                        <button className="bg-green-500 text-white px-4 py-2 rounded-lg font-semibold cursor-pointer" onClick={createOrder}
+                        >Place Order</button>
+
                     </div>
                 </div>
 

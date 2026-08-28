@@ -1,6 +1,5 @@
 import Order from "../models/order.js"
 import Product from "../models/product.js"
-import crypto from "crypto"
 
 export default async function createOrder(req, res){
     const user = req.user
@@ -12,13 +11,15 @@ export default async function createOrder(req, res){
         return
     }
 
+    //let orderId = "ORD00000001"
+
     const orderData = {
         orderId : "ORD00000001",
         email : user.email,
         firstName : user.firstName,
         lastName : user.lastName,
         addressLineOne : req.body.addressLineOne,
-        addressLineTwo : req.body.addressLineTwo,
+        adressLineTwo : req.body.adressLineTwo,
         city : req.body.city,
         state : req.body.state,
         postalCode : req.body.postalCode,
@@ -35,28 +36,10 @@ export default async function createOrder(req, res){
         orderData.lastName = req.body.lastName
     }
 
-    // Basic required-field validation so we fail fast with a clear message
-    // instead of throwing later (e.g. inside crypto.createHash)
-    const requiredFields = ["addressLineOne", "city", "state", "postalCode", "phone"]
-    for(const field of requiredFields){
-        if(orderData[field] == null || orderData[field] === ""){
-            res.status(400).json({
-                message : `${field} is required to place an order.`
-            })
-            return
-        }
-    }
-
-    if(!Array.isArray(req.body.items) || req.body.items.length === 0){
-        res.status(400).json({
-            message : "Your order must contain at least one item."
-        })
-        return
-    }
-
     try{
         const lastOrder = await Order.findOne().sort({date: -1})
         if(lastOrder != null){
+            //ORD00000039
             const lastOrderId = lastOrder.orderId //"ORD00000039"
 
             const lastOrderNumberInString = lastOrderId.replace("ORD", "") //"00000039"
@@ -70,10 +53,10 @@ export default async function createOrder(req, res){
             orderData.orderId = "ORD" + newOrderNumberInString //"ORD00000040"
         }
 
-        for(let i = 0; i < req.body.items.length; i++){
+         for(let i = 0; i < req.body.items.length; i++){
 
             const product = await Product.findOne({productId : req.body.items[i].productId})
-
+            //if(product == null || !product.isAvailable || product.stock < req.body.items[i].quantity)
             if(product == null || !product.isAvailable){
                 res.status(400).json({
                     message : "Product with productId " + req.body.items[i].productId + " not found. Please place your order without this product."
@@ -86,7 +69,7 @@ export default async function createOrder(req, res){
                         productId : product.productId,
                         name : product.name,
                         price : product.price,
-                        labelledPrice : product.labeledPrice,
+                        labeledPrice : product.labeledPrice,
                         image : product.images[0]
                     },
                     quantity : req.body.items[i].quantity
@@ -97,24 +80,12 @@ export default async function createOrder(req, res){
 
         }
 
-        // Fail fast if PayHere credentials aren't configured on this environment,
-        // instead of letting crypto.createHash throw an unhandled TypeError.
-        const merchantId = process.env.PAYHERE_MERCHANT_ID
-        const merchantSecret = process.env.PAYHERE_MERCHANT_SECRET
-
-        if(!merchantId || !merchantSecret){
-            console.log("PAYHERE_MERCHANT_ID or PAYHERE_MERCHANT_SECRET is missing from environment variables")
-            res.status(500).json({
-                message : "Payment gateway is not configured on the server. Please contact support."
-            })
-            return
-        }
-
         const newOrder = new Order(orderData)
 
         const result = await newOrder.save()
 
         // Reduce stock of products
+
         // for(let i = 0; i < orderData.items.length; i++){
         //     await Product.findOneAndUpdate(
         //         { productId : orderData.items[i].product.productId },
@@ -122,50 +93,15 @@ export default async function createOrder(req, res){
         //     )
         // }
 
-        const amount = Number(orderData.total).toFixed(2)
-        const currency = "LKR"
-
-        const hashedSecret = crypto
-            .createHash("md5")
-            .update(merchantSecret)
-            .digest("hex")
-            .toUpperCase()
-
-        const hash = crypto
-            .createHash("md5")
-            .update(
-                merchantId +
-                orderData.orderId +
-                amount +
-                currency +
-                hashedSecret
-            )
-            .digest("hex")
-            .toUpperCase()
+        //console.log(result)
 
         res.status(201).json({
-            message: "Order placed successfully",
-
-            order: {
-                orderId: orderData.orderId,
-                total: orderData.total,
-                firstName: orderData.firstName,
-                lastName: orderData.lastName,
-                email: orderData.email,
-                addressLineOne: orderData.addressLineOne,
-                addressLineTwo: orderData.addressLineTwo,
-                city: orderData.city,
-                phone: orderData.phone
-            },
-
-            payment: {
-                merchant_id: merchantId,
-                order_id: orderData.orderId,
-                amount: amount,
-                currency: currency,
-                hash: hash
-            }
+            message : "Order placed successfully"
         })
+
+
+
+
     }catch(error){
         console.log(error)
         res.status(500).json({
@@ -185,7 +121,7 @@ export async function getOrders(req, res){
         }
 
         const pageSizeInString = req.params.pageSize || "10"
-        const pageNumberInString = req.params.pageNumber || "1"
+        const pageNumberInString = req.params.pageNumber || "12"
 
         const pageSize = parseInt(pageSizeInString)
         const pageNumber = parseInt(pageNumberInString)
@@ -236,7 +172,7 @@ export async function updateOrderStatusAndNotes(req,res){
         try{
 
             const orderId = req.params.orderId
-            await Order.findOneAndUpdate(
+            await   Order.findOneAndUpdate(
                 {orderId  : orderId},
                 {status : req.body.status, notes :  req.body.notes}
             )
@@ -254,95 +190,5 @@ export async function updateOrderStatusAndNotes(req,res){
          res.status(403).json({
             message : "You are not authorized to perform this action"
         })
-    }
-}
-
-export async function payhereNotify(req, res) {
-
-    try {
-
-        const {
-            merchant_id,
-            order_id,
-            payment_id,
-            payhere_amount,
-            payhere_currency,
-            status_code,
-            md5sig
-        } = req.body
-
-        const merchantSecret = process.env.PAYHERE_MERCHANT_SECRET
-
-        const hashedSecret = crypto
-            .createHash("md5")
-            .update(merchantSecret)
-            .digest("hex")
-            .toUpperCase()
-
-        const localMd5sig = crypto
-            .createHash("md5")
-            .update(
-                merchant_id +
-                order_id +
-                payhere_amount +
-                payhere_currency +
-                status_code +
-                hashedSecret
-            )
-            .digest("hex")
-            .toUpperCase()
-
-        if (localMd5sig !== md5sig) {
-
-            console.log("Invalid PayHere payment notification")
-
-            res.status(400).send("Invalid signature")
-
-            return
-        }
-
-        const order = await Order.findOne({
-            orderId : order_id
-        })
-
-        if (order == null) {
-
-            res.status(404).send("Order not found")
-
-            return
-        }
-
-        if (status_code === "2") {
-
-            order.paymentStatus = "Paid"
-
-            order.paymentId = payment_id
-
-            await order.save()
-
-            console.log(
-                "Payment successful for order:",
-                order_id
-            )
-
-        } else {
-
-            order.paymentStatus = "Failed"
-
-            await order.save()
-
-            console.log(
-                "Payment failed for order:",
-                order_id
-            )
-        }
-
-        res.send("OK")
-
-    } catch(error) {
-
-        console.log(error)
-
-        res.status(500).send("Payment notification error")
     }
 }
